@@ -1,0 +1,7 @@
+*
+
+!.gitignore
+!Makefile
+!config.env.dist
+!assets
+!README.md
