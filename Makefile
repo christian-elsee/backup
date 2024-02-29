@@ -46,16 +46,27 @@ init:
 check:
 	: ## $@
 	cd dist
-	restic check  \
+	restic check \
 		-o rclone.program=$$(command -v rclone) \
 		-r rclone:storj:$(name) \
 		-vv
 
+unlock:
+	: ## $@
+	cd dist
+	restic unlock \
+		-o rclone.program=$$(command -v rclone) \
+		-r rclone:storj:$(name)
+
 backup:
 	: ## $@
 	cd dist
+	restic prune \
+		-o rclone.program=$$(command -v rclone) \
+		-r rclone:storj:$(name)
 	printf "%s" "$(backup)" \
 		| tr ":" " " \
-		| xargs -r -- restic backup \
+		| xargs -r -- nohup restic backup \
 				-o rclone.program=$$(command -v rclone) \
-				-r rclone:storj:$(name)
+				-r rclone:storj:$(name) \
+		| tee log/backup & wait

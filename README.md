@@ -22,7 +22,7 @@ There is NO WARRANTY, to the extent permitted by law.
 ```sh
 $ cp config.env.dist config.env
 $ cat config.env.dist 
-name=fvhxp07xhv22
+name=ssdd
 backup=$(HOME)/Develop:$(HOME)/Documents
 
 export ACCESS_KEY_ID=$(ACCESS_KEY_ID)
@@ -51,4 +51,26 @@ no errors were found
 
 ## usage
 
+Run backup using `make` workflow
+```sh
+$ make
+...
+```
+```sh
+$ make backup
+...
+```
+
+## troubleshoot
+
+Unlock canceled/failed backups
+```sh
+$ make unlock
+: ## unlock
+cd dist
+restic unlock \
+  -o rclone.program=$(command -v rclone) \
+  -r rclone:storj:fubar
+repository d09af0fc opened (version 2, compression level auto)
+```
 
