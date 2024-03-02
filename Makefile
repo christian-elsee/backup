@@ -51,13 +51,6 @@ check:
 		-r rclone:storj:$(name) \
 		-vv
 
-unlock:
-	: ## $@
-	cd dist
-	restic unlock \
-		-o rclone.program=$$(command -v rclone) \
-		-r rclone:storj:$(name)
-
 backup:
 	: ## $@
 	cd dist
@@ -66,7 +59,22 @@ backup:
 		-r rclone:storj:$(name)
 	printf "%s" "$(backup)" \
 		| tr ":" " " \
-		| xargs -r -- nohup restic backup \
+		| xargs -r -- time restic backup \
 				-o rclone.program=$$(command -v rclone) \
 				-r rclone:storj:$(name) \
-		| tee log/backup & wait
+				-vv \
+		| tee log/backup
+
+unlock: dist
+	: ## $@
+	cd dist
+	restic unlock \
+		-o rclone.program=$$(command -v rclone) \
+		-r rclone:storj:$(name)
+
+summary: dist
+	: ## $@
+	cd dist
+	restic stats \
+		-o rclone.program=$$(command -v rclone) \
+		-r rclone:storj:$(name)
