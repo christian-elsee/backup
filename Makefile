@@ -38,9 +38,10 @@ init:
 
 	# pass rclone executable path to deal with
 	# restic security "feature"
-	restic init \
+	nohup restic init \
 		-o rclone.program=$$(command -v rclone) \
 		-r rclone:storj:$(name) \
+	| tee dist/init \
 	||:
 
 check:
@@ -59,7 +60,7 @@ backup:
 		-r rclone:storj:$(name)
 	printf "%s" "$(backup)" \
 		| tr ":" " " \
-		| xargs -r -- time restic backup \
+		| xargs -r -- nohup time restic backup \
 				-o rclone.program=$$(command -v rclone) \
 				-r rclone:storj:$(name) \
 				-vv \
