@@ -41,7 +41,7 @@ init:
 	nohup restic init \
 		-o rclone.program=$$(command -v rclone) \
 		-r rclone:storj:$(name) \
-	| tee /dev/stderr dist/init.log \
+	| tee /dev/stderr dist/log/init \
 	||:
 
 check:
@@ -58,7 +58,7 @@ backup:
 	nohup restic prune \
 		-o rclone.program=$$(command -v rclone) \
 		-r rclone:storj:$(name) \
-	| tee /dev/stderr dist/prune.log
+	| tee /dev/stderr log/prune.log
 
 	printf "%s" "$(backup)" \
 		| tr ":" " " \
