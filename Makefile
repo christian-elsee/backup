@@ -38,10 +38,10 @@ init:
 
 	# pass rclone executable path to deal with
 	# restic security "feature"
-	nohup restic init \
+	restic init \
 		-o rclone.program=$$(command -v rclone) \
 		-r rclone:storj:$(name) \
-	| tee /dev/stderr dist/log/init \
+	| tee log/init \
 	||:
 
 check:
@@ -55,10 +55,10 @@ check:
 backup:
 	: ## $@
 	cd dist
-	nohup restic prune \
+	restic prune \
 		-o rclone.program=$$(command -v rclone) \
 		-r rclone:storj:$(name) \
-	| tee /dev/stderr log/prune.log
+	| tee log/prune.log
 
 	printf "%s" "$(backup)" \
 		| tr ":" " " \
@@ -66,7 +66,7 @@ backup:
 				-o rclone.program=$$(command -v rclone) \
 				-r rclone:storj:$(name) \
 				-vv \
-		| tee /dev/stderr log/backup.log
+		| tee log/backup.log & wait
 
 unlock: dist
 	: ## $@
